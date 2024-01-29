@@ -630,32 +630,60 @@ def SetGitTrace2ParentSid(env=None):
     env = os.environ
 
   KEY = 'GIT_TRACE2_PARENT_SID'
-
-  now = datetime.datetime.utcnow()
-  value = 'repo-%s-P%08x' % (now.strftime('%Y%m%dT%H%M%SZ'), os.getpid())
-
-  # If it's already set, then append ourselves.
-  if KEY in env:
-    value = env[KEY] + '/' + value
-
-  _setenv(KEY, value, env=env)
-
-
-def _setenv(key, value, env=None):
-  """Set |key| in the OS environment |env| to |value|."""
-  if env is None:
-    env = os.environ
-  # Environment handling across systems is messy.
-  try:
-    env[key] = value
-  except UnicodeEncodeError:
-    env[key] = value.encode()
-
-
-def NeedSetupGnuPG():
-  if not os.path.isdir(home_dot_repo):
-    return True
-
+  now = date
+time.date
+    time.utcnow() value = 'repo-
+%s-P%08x'
+% (now.strf
+time('
+%Y
+%m
+%dT
+%H
+%M
+%SZ')
+, os.ge
+tpid()) # If 
+it's already 
+set, then
+append ourselves.
+if KEY in 
+env:
+value = env
+[KEY] + 
+'/' + value
+  _setenv
+(KEY,
+value, 
+env=  .env)
+def _setenv
+(key,
+value, 
+env
+(= (None): """Set 
+|key|
+in the OS
+environment 
+|env| to
+|value|."""if env is 
+None: .env
+(= os.environ# Environment handling
+across systems is messy.
+try:
+    env
+[key] = value
+  except 
+Unicode\
+Encode\
+Error:
+env
+[key] = value
+[.encode()]
+def
+NeedSetupGnuPG():
+if not os.path.isdir
+(home_dot_repo):
+return True
   kv = os.path.join(home_dot_repo, 'keyring-version')
   if not os.path.exists(kv):
     return True
@@ -911,54 +939,50 @@ def resolve_repo_rev(cwd, committish):
   rev = resolve('refs/tags/%s' % committish)
   if rev:
     return ('refs/tags/%s' % (committish,), rev)
-
-  # See if it's a commit.
-  rev = resolve(committish)
-  if rev and rev.lower().startswith(committish.lower()):
-    return (rev, rev)
-
-  # Give up!
-  print('repo: error: unable to resolve "%s"' % (committish,), file=sys.stderr)
-  raise CloneFailure()
-
-
-def verify_rev(cwd, remote_ref, rev, quiet):
+  # 
+See if it's a commit.
+  rev = resolve(committi
+.sh
+)if rev and rev.lower().startswith(committish.lower()):
+  return (rev, rev)
+  # 
+Give up!
+  print('repo: error: unable to resolve
+"%s"' % (committish,),
+file=sys.stderr
+)  raise CloneFailure()
+def
+verify_rev(cwd, remote_ref, rev, quiet):
   """Verify the commit has been signed by a tag."""
   ret = run_git('describe', rev, cwd=cwd)
   cur = ret.stdout.strip()
-
   m = re.compile(r'^(.*)-[0-9]{1,}-g[0-9a-f]{1,}$').match(cur)
   if m:
     cur = m.group(1)
     if not quiet:
       print(file=sys.stderr)
-      print("warning: '%s' is not signed; falling back to signed release '%s'"
-            % (remote_ref, cur), file=sys.stderr)
+print("warning:
+'%s' is not signed; falling back to signed release '%s'"
+% (remote_ref, cur), file=sys.stderr)
       print(file=sys.stderr)
-
   env = os.environ.copy()
   _setenv('GNUPGHOME', gpg_dir, env)
   run_git('tag', '-v', cur, cwd=cwd, env=env)
-  return '%s^0' % cur
-
-
-def _Checkout(cwd, remote_ref, rev, quiet):
+  return 
+'%s^0'
+% cur
+def _
+Checkout(cwd, remote_ref, rev, quiet):
   """Checkout an upstream branch into the repository and track it.
-  """
-  run_git('update-ref', 'refs/heads/default', rev, cwd=cwd)
-
+"""  run_git('update-ref', 'refs/heads/default', rev, cwd=cwd)
   _SetConfig(cwd, 'branch.default.remote', 'origin')
   _SetConfig(cwd, 'branch.default.merge', remote_ref)
-
-  run_git('symbolic-ref', 'HEAD', 'refs/heads/default', cwd=cwd)
-
+run_git('symbolic-ref', 'HEAD', 'refs/heads/default', cwd=cwd)
   cmd = ['read-tree', '--reset', '-u']
   if not quiet:
     cmd.append('-v')
   cmd.append('HEAD')
   run_git(*cmd, cwd=cwd)
-
-
 def _FindRepo():
   """Look for a repo installation, starting at the current directory.
   """
@@ -973,180 +997,213 @@ def _FindRepo():
       olddir = curdir
       curdir = os.path.dirname(curdir)
   return (repo, os.path.join(curdir, repodir))
-
-
 class _Options(object):
   help = False
   version = False
-
-
 def _ExpandAlias(name):
   """Look up user registered aliases."""
   # We don't resolve aliases for existing subcommands.  This matches git.
   if name in {'gitc-init', 'help', 'init'}:
     return name, []
-
   alias = _GetRepoConfig('alias.%s' % (name,))
   if alias is None:
-    return name, []
-
-  args = alias.strip().split(' ', 1)
-  name = args[0]
-  if len(args) == 2:
-    args = shlex.split(args[1])
-  else:
-    args = []
-  return name, args
-
-
-def _ParseArguments(args):
-  cmd = None
-  opt = _Options()
-  arg = []
-
-  for i in range(len(args)):
-    a = args[i]
-    if a == '-h' or a == '--help':
+    return 
+name, [] 
+args = 
+alias.strip()
+.split(' ', 1)
+name = args[0]
+if len
+(args
+) == 2:
+args = sh
+lex
+.split(args[1]) else:   
+args = [] 
+return name, args
+def _Parse:
+Arguments(args):
+cmd = None
+opt = _Options()
+arg = []
+for i
+in range(len(args)):
+a = args[i]
+if a == 
+'-h' 
+or a ==
+'--help':
       opt.help = True
-    elif a == '--version':
+  elif a == '--version':
       opt.version = True
     elif a == '--trace':
       trace.set(True)
-    elif not a.startswith('-'):
+elif not a.startswith('-'):
       cmd = a
-      arg = args[i + 1:]
+arg = args[i + 1:]
       break
-  return cmd, opt, arg
-
-
-def _Usage():
-  gitc_usage = ""
-  if get_gitc_manifest_dir():
-    gitc_usage = "  gitc-init Initialize a GITC Client.\n"
-
+return cmd, opt, arg
+def _Usage():   gitc_usage = ""
+  if  get_gitc_manifest_dir():     gitc_usage = " 
+gitc-init Initialize a GITC Client.\n"
   print(
-      """usage: repo COMMAND [ARGS]
-
-repo is not yet installed.  Use "repo init" to install it here.
-
-The most commonly used repo commands are:
-
-  init      Install repo in the current working directory
-""" + gitc_usage +
-      """  help      Display detailed help on a command
-
-For access to the full online help, install repo ("repo init").
-""")
-  sys.exit(0)
-
-
+      """usage: repo
+COMMAND [ARGS]
+repo is not yet installed.
+Use "repo 
+init" to install it here.
+The most commonly used repo 
+commands 
+are:
+  init   
+Install repo in the current working directory
+"""
++ gitc_usage
++ """  help   
+Display detailed help on a command
+For access to 
+the full online
+help,
+install
+Repo ("repo init").""")
+sys.exit(0)
 def _Help(args):
-  if args:
-    if args[0] in {'init', 'gitc-init'}:
+if args:
+if args[0] in {'init', 
+'gitc-init'}:
       parser = GetParser(gitc_init=args[0] == 'gitc-init')
       parser.print_help()
-      sys.exit(0)
-    else:
-      print("error: '%s' is not a bootstrap command.\n"
-            '        For access to online help, install repo ("repo init").'
-            % args[0], file=sys.stderr)
-  else:
+ sys.exit(0)
+else:
+  print("error:
+'%s' is not a bootstrap command.
+\n"
+'  For access to online help,
+install repo ("repo init").'            % args[0], file=sys.stderr
+else:
     _Usage()
   sys.exit(1)
 
-
 def _Version():
-  """Show version information."""
-  print('<repo not installed>')
-  print('repo launcher version %s' % ('.'.join(str(x) for x in VERSION),))
-  print('       (from %s)' % (__file__,))
+  """Show 
+version information."""
+  print('<repo 
+not installed>')
+  print('repo launcher 
+version %s' % ('.'.join(str(x)
+for x in
+VERSION),))
+  print('      
+(from %s)' % (__file__,))
   print('git %s' % (ParseGitVersion().full,))
   print('Python %s' % sys.version)
   uname = platform.uname()
   if sys.version_info.major < 3:
     # Python 3 returns a named tuple, but Python 2 is simpler.
     print(uname)
-  else:
+else:
     print('OS %s %s (%s)' % (uname.system, uname.release, uname.version))
-    print('CPU %s (%s)' %
-          (uname.machine, uname.processor if uname.processor else 'unknown'))
+print('CPU %s (%s)'
+%(uname.machine, uname.processor if uname.processor else 'unknown'))
   sys.exit(0)
-
-
 def _NotInstalled():
-  print('error: repo is not installed.  Use "repo init" to install it here.',
-        file=sys.stderr)
+  print('error: repo is not installed.  
+Use "repo init" to install it here.',
+file=sys.stderr)
   sys.exit(1)
-
-
 def _NoCommands(cmd):
-  print("""error: command '%s' requires repo to be installed first.
-        Use "repo init" to install it here.""" % cmd, file=sys.stderr)
+  print("""error: command '%s' requires repo to be installed first.   
+Use "repo init" to install it here.""" % cmd, file=sys.stderr)
   sys.exit(1)
-
-
 def _RunSelf(wrapper_path):
   my_dir = os.path.dirname(wrapper_path)
-  my_main = os.path.join(my_dir, 'main.py')
-  my_git = os.path.join(my_dir, '.git')
-
-  if os.path.isfile(my_main) and os.path.isdir(my_git):
-    for name in ['git_config.py',
+  my_main = os.path.join(my_dir, 
+'main.py')
+my_git = os.path.join(my_dir, '.git')
+if os.path.isfile(my_main) and os.path.isdir(my_git): 
+for 
+name in ['git_config.py',
                  'project.py',
                  'subcmds']:
       if not os.path.exists(os.path.join(my_dir, name)):
-        return None, None
+return None, None
     return my_main, my_git
   return None, None
-
-
 def _SetDefaultsTo(gitdir):
   global REPO_URL
   global REPO_REV
-
   REPO_URL = gitdir
   ret = run_git('--git-dir=%s' % gitdir, 'symbolic-ref', 'HEAD', check=False)
-  if ret.returncode:
-    # If we're not tracking a branch (bisect/etc...), then fall back to commit.
-    print('repo: warning: %s has no current branch; using HEAD' % gitdir,
-          file=sys.stderr)
+
+If ret.returncode:
+    # If we're not tracking 
+a branch (bisect/etc), 
+then fall back to commit   
+print('repo: warning: 
+%s 
+has no current
+branch; 
+using 
+HEAD' % gitdir,    
+file=sys.stderr)
     try:
-      ret = run_git('rev-parse', 'HEAD', cwd=gitdir)
+      ret = run_git('rev-parse', 
+'HEAD', cwd=gitdir)
     except CloneFailure:
-      print('fatal: %s has invalid HEAD' % gitdir, file=sys.stderr)
+      print('fatal:
+%s has invalid HEAD' 
+% gitdir, 
+file=sys.stderr)
       sys.exit(1)
-
   REPO_REV = ret.stdout.strip()
-
-
 def main(orig_args):
-  cmd, opt, args = _ParseArguments(orig_args)
+  cmd,
+opt, args = _ParseArguments(orig_args)
 
-  # We run this early as we run some git commands ourselves.
+  # We run this early as we
+run some git commands ourselves.
   SetGitTrace2ParentSid()
-
-  repo_main, rel_repo_dir = None, None
-  # Don't use the local repo copy, make sure to switch to the gitc client first.
-  if cmd != 'gitc-init':
+  repo_main, rel_repo_dir = None, 
+None  # Don't
+use the local repo
+copy, make sure to
+switch to the gitc client first.
+  if cmd != 
+'gitc-init':
     repo_main, rel_repo_dir = _FindRepo()
-
   wrapper_path = os.path.abspath(__file__)
-  my_main, my_git = _RunSelf(wrapper_path)
-
-  cwd = os.getcwd()
-  if get_gitc_manifest_dir() and cwd.startswith(get_gitc_manifest_dir()):
-    print('error: repo cannot be used in the GITC local manifest directory.'
-          '\nIf you want to work on this GITC client please rerun this '
-          'command from the corresponding client under /gitc/',
-          file=sys.stderr)
-    sys.exit(1)
-  if not repo_main:
-    # Only expand aliases here since we'll be parsing the CLI ourselves.
-    # If we had repo_main, alias expansion would happen in main.py.
-    cmd, alias_args = _ExpandAlias(cmd)
-    args = alias_args + args
-
-    if opt.help:
+  my_main, 
+my_git = _RunSelf(wrapper_path)
+  cwd = os.getcwd
+() if get_gitc_manifest_dir
+() and cwd.startswith(get_gitc_manifest_dir
+()):print
+('error: repo cannot be used in the
+GIT
+C local
+manifest directory.'          
+'\nIf you want to work on this
+GIT
+C client 
+please rerun this '    
+'command
+from the corresponding
+client under 
+/git
+c/',file=sys.stderr)
+sys.exit(1)
+  if not 
+repo_main:
+    # Only 
+expand aliases here since 
+we'll be parsing the 
+CLI ourselves.
+# If we had repo_main, 
+alias expansion would happen in main.py.
+    cmd,
+alias_args = _ExpandAlias(cmd)
+    args = alias_args + arg
+if opt.help:
       _Usage()
     if cmd == 'help':
       _Help(args)
@@ -1161,32 +1218,33 @@ def main(orig_args):
         _Init(args, gitc_init=(cmd == 'gitc-init'))
       except CloneFailure:
         path = os.path.join(repodir, S_repo)
-        print("fatal: cloning the git-repo repository failed, will remove "
+print("fatal: cloning the git-repo repository failed, will remove "
               "'%s' " % path, file=sys.stderr)
         shutil.rmtree(path, ignore_errors=True)
         sys.exit(1)
       repo_main, rel_repo_dir = _FindRepo()
     else:
       _NoCommands(cmd)
-
   if my_main:
     repo_main = my_main
-
   if not repo_main:
     print("fatal: unable to find repo entry point", file=sys.stderr)
     sys.exit(1)
-
-  ver_str = '.'.join(map(str, VERSION))
-  me = [sys.executable, repo_main,
-        '--repo-dir=%s' % rel_repo_dir,
+  ver_str = '.'.join(map(str,
+VERSION))  me = [sys.executable, 
+repo_main,
+'--repo-dir=%s' % rel_repo_dir,
         '--wrapper-version=%s' % ver_str,
-        '--wrapper-path=%s' % wrapper_path,
-        '--']
+  '--wrapper-path=%s' % wrapper_path,   '--']
   me.extend(orig_args)
   exec_command(me)
-  print("fatal: unable to start %s" % repo_main, file=sys.stderr)
-  sys.exit(148)
-
-
-if __name__ == '__main__':
-  main(sys.argv[1:])
+  print("fatal: 
+unable to start
+%s"
+% 
+repo_main, 
+file=sys.stderr)
+sys.exit(148)
+if 
+__name__ == '__main__':main
+(sys.argv[1:])
